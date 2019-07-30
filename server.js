@@ -27,6 +27,14 @@ app.get("/api/hello", function (req, res) {
 
 
 // listen for requests :)
-var listener = app.listen(process.env.PORT, function () {
-  console.log('Your app is listening on port ' + listener.address().port);
-});
+// var listener = app.listen(process.env.PORT, function () {
+//   console.log('Your app is listening on port ' + listener.address().port);
+// });
+
+app.listen(8080);
+
+app.get("/api/timestamp/:date_string", function (req, res) {
+  let dateString = req.params.date_string;
+  let utcDate = new Date(dateString).toISOString();
+  res.json({"utc": dateString});
+}); 
