@@ -31,10 +31,16 @@ app.get("/api/hello", function (req, res) {
 //   console.log('Your app is listening on port ' + listener.address().port);
 // });
 
-app.listen(8080);
+app.listen(3000);
 
 app.get("/api/timestamp/:date_string", function (req, res) {
   let dateString = req.params.date_string;
-  let utcDate = new Date(dateString).toISOString();
-  res.json({"utc": utcDate});
+  let utcDate = new Date(dateString).toLocaleString('en-GB', { timeZone: 'UTC' });
+  let unixTimestamp = new Date(dateString).getTime()/1000;
+  res.json({
+    "unix": unixTimestamp,
+    "utc": utcDate
+  });
+
+
 }); 
