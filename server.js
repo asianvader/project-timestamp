@@ -36,5 +36,5 @@ app.listen(8080);
 app.get("/api/timestamp/:date_string", function (req, res) {
   let dateString = req.params.date_string;
   let utcDate = new Date(dateString).toISOString();
-  res.json({"utc": dateString});
+  res.json({"utc": utcDate});
 }); 
