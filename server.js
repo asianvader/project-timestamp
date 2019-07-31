@@ -24,26 +24,22 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
-
-
-// listen for requests :)
-// var listener = app.listen(process.env.PORT, function () {
-//   console.log('Your app is listening on port ' + listener.address().port);
-// });
-
 app.listen(3000);
 
 app.get("/api/timestamp/:date_string?", function (req, res) {
   let dateString = req.params.date_string;
 
-  let utcDate = new Date(dateString).toUTCString();
-
-  if (!/^([\+-]?\d{4}(?!\d{2}\b))((-?)((0[1-9]|1[0-2])(\3([12]\d|0[1-9]|3[01]))?|W([0-4]\d|5[0-2])(-?[1-7])?|(00[1-9]|0[1-9]\d|[12]\d{2}|3([0-5]\d|6[1-6]))))/.test(dateString)
-    && dateString === !undefined)  {
+  // to test if the req is a unix timestamp and convert to UTC
+  if (/[0-9]{10}/.test(dateString)) {
+    let dateStringToInt = parseInt(dateString);
+    let unixToUtc = new Date(dateStringToInt*1000).toUTCString();
     res.json({
-      error: "Invalid Date"
+      "unix": dateStringToInt,
+      "utc": unixToUtc
     });
-  } else if (dateString === undefined) {
+  // to test if the req is empty
+  } 
+  else if (dateString === undefined) {
     console.log('should have no query string');
     let dateToday = new Date().toUTCString();
     let unixTimestamp = new Date().getTime()/1000;
@@ -51,11 +47,18 @@ app.get("/api/timestamp/:date_string?", function (req, res) {
       "unix": unixTimestamp,
       "utc": dateToday
     });
+  //to test if req is a valid  
+  } else if(/[A-Za-z]+/.test(dateString )) {
+    res.json({
+      error: "Invalid Date"
+    });
+  // if req is in utc format then convert to UNIX
   } else {
     let unixTimestamp = new Date(dateString).getTime()/1000;
-  res.json({
-    "unix": unixTimestamp,
-    "utc": utcDate
-  });
+    let utcDate = new Date(dateString).toUTCString();
+    res.json({
+      "unix": unixTimestamp,
+      "utc": utcDate
+    });
   }
 }); 
